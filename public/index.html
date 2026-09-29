@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Scanner</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9729;</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">&#9729;</span>
+    <div>
+      <h1>Job Scanner</h1>
+      <p class="brand-sub">Skan wielu portali naraz &middot; <span id="brandSub">filtry pod junior</span></p>
+    </div>
+  </div>
+
+  <form id="searchForm" class="search">
+    <label class="depth profile-pick" title="Ścieżka kariery: zmienia presety, trafność, filtr tytułu i portale na dole">
+      <select id="profile"></select>
+    </label>
+    <input id="query" type="search" placeholder="wpisz stanowisko lub technologię" autocomplete="off">
+    <label class="depth" title="Ile stron pobrac z kazdego zrodla - wiecej = wolniej, ale glebiej">
+      głębokość
+      <select id="pages">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+    <button id="scanBtn" type="submit" class="btn-primary">Skanuj</button>
+    <button id="freshBtn" type="button" class="btn-ghost" title="Pomin cache i pobierz od nowa">&#8635;</button>
+  </form>
+</header>
+
+<div class="presets" id="presets"></div>
+
+<div class="status-strip" id="statusStrip"></div>
+
+<main class="layout">
+
+  <aside class="filters" id="filters">
+    <section class="fgroup">
+      <h2>Źródła skanowane</h2>
+      <div id="sourceList" class="source-list"></div>
+      <p class="hint">pracuj.pl wymaga trybu przeglądarki (puppeteer-core) — jest już włączony. justjoin.it, Glassdoor i theProtocol znajdziesz jako gotowe linki na dole strony.</p>
+    </section>
+
+    <section class="fgroup">
+      <h2>Poziom stanowiska</h2>
+      <div class="chips" id="seniorityChips">
+        <label class="chip"><input type="checkbox" value="junior" checked><span>Junior / staż</span></label>
+        <label class="chip"><input type="checkbox" value="mid"><span>Mid</span></label>
+        <label class="chip"><input type="checkbox" value="senior"><span>Senior</span></label>
+        <label class="chip"><input type="checkbox" value="unknown" checked><span>Nieokreślony</span></label>
+      </div>
+      <label class="switch"><input type="checkbox" id="juniorFriendly"><span>Tylko "junior friendly" (bez senior/lead/architekt w tytule)</span></label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Tryb pracy</h2>
+      <div class="radios" id="workMode">
+        <label><input type="radio" name="wm" value="" checked><span>Dowolny</span></label>
+        <label><input type="radio" name="wm" value="remote"><span>Tylko zdalna</span></label>
+        <label><input type="radio" name="wm" value="remote_hybrid"><span>Zdalna lub hybrydowa</span></label>
+        <label><input type="radio" name="wm" value="onsite"><span>Stacjonarna</span></label>
+      </div>
+    </section>
+
+    <section class="fgroup">
+      <h2>Lokalizacja</h2>
+      <input id="location" type="text" placeholder="np. Warszawa, Kraków, Poland">
+      <div class="chips small" id="cityChips"></div>
+    </section>
+
+    <section class="fgroup">
+      <h2>Wynagrodzenie</h2>
+      <label class="switch"><input type="checkbox" id="salaryOnly"><span>Tylko oferty z widełkami</span></label>
+      <label class="range-row">
+        <span>min. <b id="salaryMinLabel">0</b> PLN/mies.</span>
+        <input id="salaryMin" type="range" min="0" max="30000" step="1000" value="0">
+      </label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Świeżość</h2>
+      <select id="days">
+        <option value="0">Dowolna</option>
+        <option value="1">Ostatnie 24h</option>
+        <option value="3">Ostatnie 3 dni</option>
+        <option value="7" selected>Ostatnie 7 dni</option>
+        <option value="14">Ostatnie 14 dni</option>
+        <option value="30">Ostatnie 30 dni</option>
+      </select>
+    </section>
+
+    <section class="fgroup">
+      <h2>Słowa kluczowe</h2>
+      <input id="mustHave" type="text" placeholder="musi zawierać, np. c#, powershell">
+      <input id="exclude" type="text" placeholder="wyklucz, np. senior, sap, java">
+      <label class="switch"><input type="checkbox" id="topicInTitle"><span id="topicInTitleLabel">Szukana fraza musi być w tytule</span></label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Widok</h2>
+      <div class="radios" id="viewMode">
+        <label><input type="radio" name="vm" value="all" checked><span>Wszystkie</span></label>
+        <label><input type="radio" name="vm" value="saved"><span>Tylko zapisane &#9733;</span></label>
+        <label><input type="radio" name="vm" value="new"><span>Tylko nowe od ostatniego skanu</span></label>
+        <label><input type="radio" name="vm" value="hidden"><span>Kosz (ukryte)</span></label>
+      </div>
+      <button type="button" class="btn-ghost wide" id="resetFilters">Wyczyść filtry</button>
+    </section>
+  </aside>
+
+  <section class="results">
+    <div class="results-head">
+      <div>
+        <strong id="resultCount">0</strong> ofert po filtrach
+        <span class="muted" id="resultTotal"></span>
+      </div>
+      <div class="results-tools">
+        <label>sortuj
+          <select id="sortBy">
+            <option value="relevance">trafność</option>
+            <option value="date">najnowsze</option>
+            <option value="salary">wynagrodzenie</option>
+            <option value="company">firma</option>
+          </select>
+        </label>
+        <button type="button" class="btn-ghost" id="exportCsv">Eksport CSV</button>
+      </div>
+    </div>
+
+    <div id="jobList" class="job-list">
+      <div class="empty">Kliknij <b>Skanuj</b>, żeby pobrać oferty.</div>
+    </div>
+  </section>
+</main>
+
+<section class="deeplinks">
+  <h2>Portale do otwarcia ręcznie <span class="muted">(filtry poniżej są już zaszyte w linkach)</span></h2>
+  <p class="hint">justjoin.it, Glassdoor i theProtocol blokują automatyczne pobieranie (Cloudflare, odcisk TLS klienta).
+     Poniższe linki otwierają ich wyszukiwarki z ustawioną frazą, poziomem i trybem pracy z panelu obok.</p>
+  <div class="link-grid" id="linkGrid"></div>
+</section>
+
+<footer class="foot">
+  Dane pobierane na żywo z publicznych API portali. Aplikacja działa lokalnie — nic nie wychodzi poza Twój komputer.
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

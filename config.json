@@ -1,0 +1,146 @@
+{
+  "port": 4321,
+  "cacheMinutes": 10,
+  "defaultProfile": "azure",
+  "_profilesComment": "Profil = sciezka kariery: wlasne presety, slowa podbijajace trafnosc (boostTerms), slowa dla filtra 'musi byc w tytule' (titleWords; puste = slowa z frazy) i dodatkowe portale (extraLinks, {q} = fraza). Nowy profil = kolejny wpis w tej liscie.",
+  "profiles": [
+    {
+      "key": "azure",
+      "label": "Azure / Cloud",
+      "subtitle": "filtry pod junior / cloud / Azure",
+      "defaultQuery": "azure",
+      "placeholder": "np. azure, azure administrator, cloud support",
+      "titleFilterLabel": "Azure/cloud musi być w tytule",
+      "presets": [
+        { "label": "Azure (wszystko)", "q": "azure" },
+        { "label": "Azure Junior", "q": "azure", "seniority": ["junior"] },
+        { "label": "Azure Administrator", "q": "azure administrator" },
+        { "label": "Azure DevOps", "q": "azure devops" },
+        { "label": "Cloud Engineer", "q": "cloud engineer" },
+        { "label": ".NET + Azure", "q": "azure .net" },
+        { "label": "Support / 1st line IT", "q": "helpdesk support" }
+      ],
+      "boostTerms": [
+        "azure", "az-104", "az-900", "az-204", "az-305", "az-500", "entra", "active directory",
+        "microsoft 365", "m365", "office 365", "intune", "aks", "bicep",
+        "azure devops", "powershell", "terraform", "cloud", "chmur", "devops", "sccm",
+        "sharepoint", "exchange online", "fabric", "synapse", "data factory"
+      ],
+      "titleWords": ["azure", "cloud", "chmur", "devops", "microsoft", "m365", "entra", "intune", "aks", "sccm", "infrastructure", "infrastruktur"],
+      "extraLinks": [
+        {
+          "portal": "Microsoft Careers",
+          "region": "Globalnie",
+          "url": "https://jobs.careers.microsoft.com/global/en/search?q={q}",
+          "juniorParam": "&exp=Students%20and%20graduates",
+          "note": "Programy dla studentow i absolwentow"
+        }
+      ]
+    },
+    {
+      "key": "unity",
+      "label": "Unity / GameDev",
+      "subtitle": "filtry pod junior / Unity / gamedev",
+      "defaultQuery": "unity",
+      "placeholder": "np. unity, unity developer, gameplay programmer",
+      "titleFilterLabel": "Unity/gamedev musi być w tytule",
+      "presets": [
+        { "label": "Unity (wszystko)", "q": "unity" },
+        { "label": "Unity Junior", "q": "unity", "seniority": ["junior"] },
+        { "label": "Unity Developer", "q": "unity developer" },
+        { "label": "Gameplay Programmer", "q": "gameplay programmer" },
+        { "label": "Game Developer", "q": "game developer" },
+        { "label": "Unity + C#", "q": "unity c#" },
+        { "label": "Unity XR / VR", "q": "unity vr" },
+        { "label": "Unreal Engine", "q": "unreal" }
+      ],
+      "boostTerms": [
+        "unity", "unity3d", "c#", "gamedev", "game dev", "game developer", "game programmer",
+        "gameplay", "gry", "gier", "unreal", "godot", "shader", "hlsl", "urp", "hdrp",
+        "mobile games", "xr", "virtual reality", "augmented reality", "photon", "netcode",
+        "addressables", "dots", "zenject", "3d"
+      ],
+      "titleWords": ["unity", "game", "gamedev", "gameplay", "gier", "unreal", "godot", "xr", "vr", "3d"],
+      "excludeTerms": ["unity catalog", "databricks", "kategoria: data", "kategoria: bi", "data engineering"],
+      "strictMatch": true,
+      "extraLinks": [
+        {
+          "portal": "Hitmarker",
+          "region": "Globalnie",
+          "url": "https://hitmarker.net/jobs?keyword={q}",
+          "note": "Najwieksza tablica ofert gamedev"
+        },
+        {
+          "portal": "GameJobs.co",
+          "region": "Globalnie",
+          "url": "https://gamejobs.co/search?q={q}",
+          "note": "Agregator ofert ze studiow gier"
+        },
+        {
+          "portal": "Games Jobs Direct",
+          "region": "Europa / globalnie",
+          "url": "https://www.gamesjobsdirect.com/results?keywords={q}",
+          "note": "Sporo studiow z UK i UE"
+        },
+        {
+          "portal": "Work With Indies",
+          "region": "Globalnie / zdalne",
+          "url": "https://www.workwithindies.com/",
+          "note": "Studia indie, duzo zdalnych; fraze wpisz na miejscu"
+        },
+        {
+          "portal": "JustJoin.it (Game)",
+          "region": "Polska",
+          "url": "https://justjoin.it/job-offers/all-locations/game?keyword={q}",
+          "note": "Kategoria gamedev z fraza"
+        },
+        {
+          "portal": "NoFluffJobs Gamedev",
+          "region": "Polska",
+          "url": "https://nofluffjobs.com/pl/gamedev",
+          "note": "Cala kategoria gamedev (skan w aplikacji idzie po frazie)"
+        },
+        {
+          "portal": "Unity Careers",
+          "region": "Globalnie",
+          "url": "https://unity.com/careers/positions",
+          "note": "Oferty samej firmy Unity"
+        }
+      ]
+    },
+    {
+      "key": "any",
+      "label": "Dowolna fraza",
+      "subtitle": "wpisz dowolne stanowisko lub technologie",
+      "defaultQuery": "",
+      "placeholder": "np. python, react developer, tester manualny",
+      "titleFilterLabel": "Szukana fraza musi być w tytule",
+      "presets": [],
+      "boostTerms": [],
+      "titleWords": [],
+      "extraLinks": []
+    }
+  ],
+  "adzuna": {
+    "enabled": false,
+    "app_id": "",
+    "app_key": "",
+    "country": "pl",
+    "_comment": "Darmowy klucz: https://developer.adzuna.com/ . UWAGA: sprawdzone 2026-09-06 - polski indeks Adzuny praktycznie nie zawiera ofert IT/cloud (\"azure\" = 0 wynikow, \"devops\" = 1). Zrodlo ma sens dla rol nietechnicznych, nie dla Azure. Zrodlem ofert jest praca.pl, NIE pracuj.pl."
+  },
+  "linkedin": {
+    "location": "Poland",
+    "_comment": "Lokalizacja wysylana do wyszukiwarki LinkedIna, np. \"Poland\", \"Warsaw, Mazowieckie, Poland\", \"European Union\"."
+  },
+  "browser": {
+    "enabled": true,
+    "executablePath": "",
+    "headless": true,
+    "idleTimeoutMs": 120000,
+    "_comment": "Tryb przegladarki dla portali z challengem Cloudflare (pracuj.pl). Wymaga: npm i puppeteer-core. executablePath puste = automatyczne szukanie Edge/Chrome. headless=false pokazuje okno przegladarki (przydatne, gdy Cloudflare zatrzymuje sie na challengu)."
+  },
+  "pracuj": {
+    "service": "all",
+    "_comment": "\"all\" = www.pracuj.pl (wszystkie branze, szerzej), \"it\" = it.pracuj.pl (tylko IT, wezej i trafniej)."
+  }
+}

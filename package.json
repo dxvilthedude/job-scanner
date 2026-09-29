@@ -1,0 +1,17 @@
+{
+  "name": "azure-job-scanner",
+  "version": "1.0.0",
+  "description": "Skaner ofert pracy (Azure / cloud / junior) z wielu portali",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true,
+  "optionalDependencies": {
+    "puppeteer-core": ">=22"
+  }
+}
